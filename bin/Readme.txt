@@ -19,10 +19,18 @@ the modification symbols, use switch /K
 Example command line to look for motif K# in file Proteins.fasta and 
 includes 30 residues before and after the matching motif:
 
-   ProteinSequenceMotifExtractor.exe /I:Proteins.fasta /M:K# /N:30
+   ProteinSequenceMotifExtractor.exe Proteins.fasta /M:K# /N:30
 
 You can optionally use a regular expression (RegEx) for matching the motif.  
 Use the /X switch to enable this mode.
+
+
+Example command line to look for motif K# in file Example_Proteins.txt,
+includes 30 residues before and after the matching motif, and include
+any modification symbols in the output file:
+
+   ProteinSequenceMotifExtractor.exe Example_Proteins.txt /M:K# /N:30 /K
+
 
 -------------------------------------------------------------------------------
 Written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA)
