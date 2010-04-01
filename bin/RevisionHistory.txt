@@ -1,0 +1,4 @@
+Protein Sequence Motif Extractor
+
+Version 1.0.3637; March 31, 2010
+	- Initial release

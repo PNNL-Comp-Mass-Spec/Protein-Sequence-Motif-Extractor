@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sections>
+  <section name="ProteinSequenceMotifExtractorOptions">
+    <item key="InputFileColumnDelimiterIndex" value="1" />
+    <item key="InputFileColumnOrdering" value="2" />
+    
+    <item key="Motif" value="K#" />
+    <item key="RegexMotif" value="False" />
+
+    <item key="PrefixResidueCount" value="30" />
+    <item key="SuffixResidueCount" value="30" />
+    <item key="KeepModSymbols" value="False" />
+
+    <item key="OutputMotifsAsDelimitedTextFile" value="False" />
+
+  </section>
+ </sections>
