@@ -12,7 +12,7 @@ Public Class clsProteinSequenceMotifExtractor
     Inherits clsProcessFilesBaseClass
 
     Public Sub New()
-        MyBase.mFileDate = "March 31, 2010"
+        MyBase.mFileDate = "September 18, 2010"
         InitializeLocalVariables()
     End Sub
 
@@ -586,7 +586,7 @@ Public Class clsProteinSequenceMotifExtractor
                 SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.InvalidInputFilePath)
             Else
 
-                ' Determine where the input file is a .Fasta file or a tab delimited text ifle
+                ' Determine whether the input file is a .Fasta file or a tab delimited text ifle
                 If mAssumeFastaFile OrElse IsFastaFile(strInputFilePath) Then
                     If mAssumeDelimitedFile Then
                         mParsedFileIsFastaFile = False
@@ -759,17 +759,26 @@ Public Class clsProteinSequenceMotifExtractor
                 Return False
             End If
 
+            If mMotif Is Nothing Then mMotif = String.Empty
+            If mMotif.Length = 0 Then
+                SetLocalErrorCode(eMotifExtractorErrorCodes.InvalidMotif)
+                Return False
+            End If
+
             If mRegexMotif Then
                 ' Initialize the Motif Regex
                 ' Note that we are creating a case-sensitive RegEx
-                reMotif = New System.Text.RegularExpressions.Regex(mMotif, Text.RegularExpressions.RegexOptions.Compiled Or Text.RegularExpressions.RegexOptions.Singleline)
+                Try
+                    reMotif = New System.Text.RegularExpressions.Regex(mMotif, Text.RegularExpressions.RegexOptions.Compiled Or Text.RegularExpressions.RegexOptions.Singleline)
+                Catch ex As Exception
+                    HandleException("Error initializing the RegEx-based Motif using " & mMotif, ex)
+                    SetLocalErrorCode(eMotifExtractorErrorCodes.InvalidMotif)
+                End Try
+
+                ' Set strMotif to an empty string so that FindMatchingMotifs() knows to use reMotif
                 strMotif = String.Empty
             Else
                 strMotif = String.Copy(mMotif)
-                If strMotif.Length = 0 Then
-                    SetLocalErrorCode(eMotifExtractorErrorCodes.InvalidMotif)
-                    Return False
-                End If
             End If
 
             UpdateProgress("Parsing protein input file", 0)

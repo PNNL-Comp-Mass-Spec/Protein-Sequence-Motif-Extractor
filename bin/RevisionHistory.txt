@@ -1,4 +1,7 @@
 Protein Sequence Motif Extractor
 
-Version 1.0.3637; March 31, 2010
+Version 1.0.3913; September 18, 2010
+	- New versions of ProteinFileReader.dll, clsParseCommandLine.vb, and clsProcessFilesBaseClass.vb
+
+Version 1.0.3742; March 31, 2010
 	- Initial release
