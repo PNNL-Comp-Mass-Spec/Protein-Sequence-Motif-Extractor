@@ -327,17 +327,17 @@ Module modMain
             End If
             DisplayProgressPercent(mLastProgressReportValue, False)
             mLastProgressReportValue += PERCENT_REPORT_INTERVAL
-            mLastProgressReportTime = DateTime.Now
+            mLastProgressReportTime = DateTime.UtcNow
         Else
-            If DateTime.Now.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
-                mLastProgressReportTime = DateTime.Now
+            If DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
+                mLastProgressReportTime = DateTime.UtcNow
                 Console.Write(".")
             End If
         End If
     End Sub
 
     Private Sub mMotifExtractor_ProgressReset() Handles mMotifExtractor.ProgressReset
-        mLastProgressReportTime = DateTime.Now
+        mLastProgressReportTime = DateTime.UtcNow
         mLastProgressReportValue = 0
     End Sub
 End Module
