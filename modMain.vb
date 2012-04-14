@@ -33,7 +33,7 @@
 
 Module modMain
 
-    Public Const PROGRAM_DATE As String = "September 18, 2010"
+    Public Const PROGRAM_DATE As String = "April 13, 2012"
 
     Private mInputFilePath As String
     Private mAssumeFastaFile As Boolean
@@ -64,17 +64,6 @@ Module modMain
     Private WithEvents mMotifExtractor As clsProteinSequenceMotifExtractor
     Private mLastProgressReportTime As System.DateTime
     Private mLastProgressReportValue As Integer
-
-    Private Sub DisplayProgressPercent(ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
-        If blnAddCarriageReturn Then
-            Console.WriteLine()
-        End If
-        If intPercentComplete > 100 Then intPercentComplete = 100
-        Console.Write("Processing: " & intPercentComplete.ToString & "% ")
-        If blnAddCarriageReturn Then
-            Console.WriteLine()
-        End If
-    End Sub
 
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
@@ -163,17 +152,24 @@ Module modMain
             End If
 
         Catch ex As Exception
-            If mQuietMode Then
-                Throw ex
-            Else
-                Console.WriteLine("Error occurred in modMain->Main: " & ControlChars.NewLine & ex.Message)
-            End If
+			ShowErrorMessage("Error occurred in modMain->Main: " & ControlChars.NewLine & ex.Message)
             intReturnCode = -1
         End Try
 
         Return intReturnCode
 
     End Function
+
+	Private Sub DisplayProgressPercent(ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
+		If blnAddCarriageReturn Then
+			Console.WriteLine()
+		End If
+		If intPercentComplete > 100 Then intPercentComplete = 100
+		Console.Write("Processing: " & intPercentComplete.ToString & "% ")
+		If blnAddCarriageReturn Then
+			Console.WriteLine()
+		End If
+	End Sub
 
     Private Function GetAppVersion() As String
         'Return System.Windows.Forms.Application.ProductVersion & " (" & PROGRAM_DATE & ")"
@@ -242,11 +238,7 @@ Module modMain
             End If
 
         Catch ex As Exception
-            If mQuietMode Then
-                Throw New System.Exception("Error parsing the command line parameters", ex)
-            Else
-                Console.WriteLine("Error parsing the command line parameters: " & ControlChars.NewLine & ex.Message)
-            End If
+			ShowErrorMessage("Error parsing the command line parameters: " & ControlChars.NewLine & ex.Message)
         End Try
 
     End Function
@@ -300,7 +292,7 @@ Module modMain
             Console.WriteLine("Use /L to log messages to a file.  If /Q is used, then no messages will be displayed at the console.")
             Console.WriteLine()
 
-            Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2010")
+            Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2012")
             Console.WriteLine("Version: " & GetAppVersion())
             Console.WriteLine()
 
@@ -312,7 +304,7 @@ Module modMain
             System.Threading.Thread.Sleep(750)
 
         Catch ex As Exception
-            Console.WriteLine("Error displaying the program syntax: " & ex.Message)
+			ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
         End Try
 
     End Sub
