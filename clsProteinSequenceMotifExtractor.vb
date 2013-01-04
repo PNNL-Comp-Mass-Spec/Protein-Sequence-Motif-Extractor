@@ -12,7 +12,7 @@ Public Class clsProteinSequenceMotifExtractor
     Inherits clsProcessFilesBaseClass
 
     Public Sub New()
-        MyBase.mFileDate = "September 18, 2010"
+		MyBase.mFileDate = "January 4, 2013"
         InitializeLocalVariables()
     End Sub
 
@@ -710,9 +710,9 @@ Public Class clsProteinSequenceMotifExtractor
                                      ByVal strOutputFileNameBaseOverride As String) As Boolean
         ' If strOutputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
-        Dim objProteinFileReader As ProteinFileReader.ProteinFileReaderBaseClass
+		Dim objProteinFileReader As ProteinFileReader.ProteinFileReaderBaseClass = Nothing
 
-        Dim swMotifsOutputFile As System.IO.StreamWriter
+		Dim swMotifsOutputFile As System.IO.StreamWriter = Nothing
 
         Dim strLineOut As String = String.Empty
 
@@ -724,7 +724,7 @@ Public Class clsProteinSequenceMotifExtractor
 
         Dim udtProtein As udtProteinInfoType
         Dim strMotif As String
-        Dim reMotif As System.Text.RegularExpressions.Regex
+		Dim reMotif As System.Text.RegularExpressions.Regex = Nothing
 
         Dim strMessage As String
 
