@@ -1,5 +1,8 @@
 Protein Sequence Motif Extractor
 
+Version 1.0.5053; November 1, 2013
+	- Added clsProcessFilesOrFoldersBase
+
 Version 1.0.4752; January 4, 2013
 	- Updated to .NET 4
 
