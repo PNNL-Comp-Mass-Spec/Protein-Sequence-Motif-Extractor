@@ -1,5 +1,8 @@
 Protein Sequence Motif Extractor
 
+Version 1.2.5381; September 25, 2014
+	- Updated clsParseCommandLine that checks for CR/LF characters in the command line
+
 Version 1.0.5053; November 1, 2013
 	- Added clsProcessFilesOrFoldersBase
 
