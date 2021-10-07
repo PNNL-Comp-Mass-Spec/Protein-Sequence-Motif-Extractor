@@ -24,8 +24,6 @@ Public Class clsProteinSequenceMotifExtractor
         InitializeLocalVariables()
     End Sub
 
-#Region "Constants and Enums"
-
     Public Const XML_SECTION_OPTIONS As String = "ProteinSequenceMotifExtractorOptions"
 
     Public Const DEFAULT_PREFIX_RESIDUE_COUNT As Integer = 30
@@ -57,19 +55,13 @@ Public Class clsProteinSequenceMotifExtractor
         Comma = 2
     End Enum
 
-#End Region
-
-#Region "Structures"
-
     Public Structure udtProteinInfoType
         Public Name As String
         Public Description As String
         Public Sequence As String
         Public UniqueSequenceID As Integer              ' Only applies if reading a delimited text file containing peptide sequences and UniqueSequenceID values
     End Structure
-#End Region
 
-#Region "Classwide Variables"
     Private mAssumeDelimitedFile As Boolean
     Private mAssumeFastaFile As Boolean
     Private mInputFileDelimiter As Char                             ' Only used for delimited protein input files, not for fasta files
@@ -93,9 +85,7 @@ Public Class clsProteinSequenceMotifExtractor
     Public FastaFileOptions As FastaFileOptionsClass
 
     Private mLocalErrorCode As eMotifExtractorErrorCodes
-#End Region
 
-#Region "Processing Options Interface Functions"
     Public Property AssumeDelimitedFile() As Boolean
         Get
             Return mAssumeDelimitedFile
@@ -221,8 +211,6 @@ Public Class clsProteinSequenceMotifExtractor
             mSuffixResidueCount = value
         End Set
     End Property
-
-#End Region
 
     ''' <summary>
     ''' Search the Sequence in udtProtein for each motif in strMotif or reMotif
