@@ -218,8 +218,8 @@ Public Class clsProteinSequenceMotifExtractor
     ''' <param name="swMotifsOutputFile">File to write out the results</param>
     ''' <param name="blnOutputAsDelimitedText">If True, then writing to a delimited text file; otherwise, writing to a .Fasta file</param>
     ''' <param name="udtProtein">Protein info</param>
-    ''' <param name="strMotif">Text to find; if blank, then will use reMotif</param>
-    ''' <param name="reMotif">Regex to use (only used if strMotif is blank)</param>
+    ''' <param name="strMotif">Text to find (case-sensitive); if blank, will use reMotif</param>
+    ''' <param name="reMotif">Regular expression to use (only used if strMotif is blank)</param>
     ''' <remarks></remarks>
     Protected Sub FindMatchingMotifs(ByRef swMotifsOutputFile As StreamWriter,
                                      blnOutputAsDelimitedText As Boolean,
@@ -278,7 +278,7 @@ Public Class clsProteinSequenceMotifExtractor
                     End If
                 Else
                     ' Using strMotif to look for matches
-                    intMatchIndex = strProteinSequence.IndexOf(strMotif, intStartIndex)
+                    intMatchIndex = strProteinSequence.IndexOf(strMotif, intStartIndex, StringComparison.Ordinal)
                     If intMatchIndex >= 0 Then
                         strMatchResidues = strProteinSequence.Substring(intMatchIndex, strMotif.Length)
                     End If
