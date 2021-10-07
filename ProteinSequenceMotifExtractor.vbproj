@@ -63,6 +63,7 @@
     <Import Include="System.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FastaFileOptionsClass.vb" />
     <Compile Include="clsProteinSequenceMotifExtractor.vb" />
     <Compile Include="modMain.vb" />
     <Compile Include="AssemblyInfo.vb" />
