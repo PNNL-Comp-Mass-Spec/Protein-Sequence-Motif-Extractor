@@ -22,7 +22,7 @@ Public Class clsProteinSequenceMotifExtractor
     ' Ignore Spelling: Regex
 
     Public Sub New()
-        mFileDate = "October 6, 2021"
+        mFileDate = "October 7, 2021"
         InitializeLocalVariables()
     End Sub
 
@@ -66,7 +66,7 @@ Public Class clsProteinSequenceMotifExtractor
 
     Private mAssumeDelimitedFile As Boolean
     Private mAssumeFastaFile As Boolean
-    Private mInputFileDelimiter As Char                             ' Only used for delimited protein input files, not for fasta files
+    Private mInputFileDelimiter As Char                             ' Only used for delimited protein input files, not for FASTA files
     Private mDelimitedInputFileFormatCode As DelimitedProteinFileReader.ProteinFileFormatCode
 
     Private mMotif As String
@@ -298,7 +298,7 @@ Public Class clsProteinSequenceMotifExtractor
                         End If
                     Next
 
-                    ' Clear the stringbuilder object
+                    ' Clear the string builder object
                     sbResidues.Length = 0
 
                     If mKeepModSymbols Then
@@ -593,7 +593,7 @@ Public Class clsProteinSequenceMotifExtractor
                 SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath)
             Else
 
-                ' Determine whether the input file is a .Fasta file or a tab delimited text ifle
+                ' Determine whether the input file is a .Fasta file or a tab delimited text file
                 If mAssumeFastaFile OrElse IsFastaFile(strInputFilePath) Then
                     If mAssumeDelimitedFile Then
                         mParsedFileIsFastaFile = False
@@ -835,7 +835,7 @@ Public Class clsProteinSequenceMotifExtractor
             If mInputFileLineSkipCount > 0 Then
                 strMessage = "Note that " & mInputFileLineSkipCount.ToString("###,##0") & " lines were skipped in the input file due to having an unexpected format. "
                 If mParsedFileIsFastaFile Then
-                    strMessage &= "This is an unexpected error for fasta files."
+                    strMessage &= "This is an unexpected error for FASTA files."
                 Else
                     strMessage &= "Make sure that " & mDelimitedInputFileFormatCode.ToString & " is the appropriate format for this file (see the File Format Options tab)."
                 End If
