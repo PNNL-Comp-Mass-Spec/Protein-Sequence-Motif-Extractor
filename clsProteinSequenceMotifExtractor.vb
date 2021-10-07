@@ -503,7 +503,7 @@ Public Class clsProteinSequenceMotifExtractor
 
         Dim objSettingsFile As New XmlSettingsFileAccessor
 
-        Dim intDelimeterIndex As Integer
+        Dim intDelimiterIndex As Integer
 
         Try
 
@@ -528,10 +528,10 @@ Public Class clsProteinSequenceMotifExtractor
                     Return False
                 Else
 
-                    intDelimeterIndex = DelimiterCharConstants.Tab
-                    intDelimeterIndex = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "InputFileColumnDelimiterIndex", intDelimeterIndex)
+                    intDelimiterIndex = DelimiterCharConstants.Tab
+                    intDelimiterIndex = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "InputFileColumnDelimiterIndex", intDelimiterIndex)
 
-                    Me.InputFileDelimiter = LookupColumnDelimiterChar(intDelimeterIndex, ControlChars.Tab, Me.InputFileDelimiter)
+                    InputFileDelimiter = LookupColumnDelimiterChar(intDelimiterIndex, ControlChars.Tab, InputFileDelimiter)
 
                     DelimitedFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_OPTIONS, "InputFileColumnOrdering", CInt(DelimitedFileFormatCode)), DelimitedProteinFileReader.ProteinFileFormatCode)
 
