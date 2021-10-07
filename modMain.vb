@@ -264,24 +264,34 @@ Module modMain
             Console.WriteLine(" [/AD:AlternateDelimiter] [/P:ParameterFilePath] ")
             Console.WriteLine(" [/S:[MaxLevel]] [/A:AlternateOutputFolderPath] [/R] [/L]")
             Console.WriteLine()
-            Console.WriteLine("The input file path can contain the wildcard character * and should point to a FASTA file or tab-delimited text file (with columns Protein Name, Description, and Sequence). " &
-                              "The output folder switch is optional.  If omitted, the output file will be created in the same folder as the input file. " &
-                              "By default, the output file will be a .Fasta file; use /T to instead create a tab-delimited text file. " &
-                              "Use /F to indicate that the input file is a FASTA file.  If /F is not used, then the format will be assumed to be FASTA only if the file contains .fasta in the name.")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "The input file path can contain the wildcard character * and should point to a FASTA file or tab-delimited text file (with columns Protein Name, Description, and Sequence). " &
+                "The output folder switch is optional.  If omitted, the output file will be created in the same folder as the input file. " &
+                "By default, the output file will be a .Fasta file; use /T to instead create a tab-delimited text file. " &
+                "Use /F to indicate that the input file is a FASTA file.  If /F is not used, then the format will be assumed to be FASTA only if the file contains .fasta in the name."))
             Console.WriteLine()
 
-            Console.WriteLine("Use /M to define the motif to look for (examples are /M:K# to find 'K#' or /M:KCLK to find 'KCLK').  Use /X to specify that the Motif is a Regular Expression (RegEx) to match, for example:")
-            Console.WriteLine("/M:N[^P][ST][^P] /X to find N, then any residue except P, then S or T, then any residue except P.")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "Use /M to define the motif to look for (examples are /M:K# to find 'K#' or /M:KCLK to find 'KCLK'). " &
+                "Use /X to specify that the Motif is a Regular Expression (RegEx) to match, for example:"))
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "/M:N[^P][ST][^P] /X to find N, then any residue except P, then S or T, then any residue except P."))
             Console.WriteLine()
 
-            Console.WriteLine("/N specifies the number of residues to include before or after the matching motif (default " & clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT & ").  /K specifies to not remove (thus Keep) any modification symbols when creating the output file.")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "/N specifies the number of residues to include before or after the matching motif (default " & clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT & "). " &
+                "/K specifies to not remove (thus Keep) any modification symbols when creating the output file."))
             Console.WriteLine()
-            Console.WriteLine("Use /AD to specify a delimiter other than the Tab character (not applicable for FASTA files). The parameter file path is optional.  If included, it should point to a valid XML parameter file.")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "Use /AD to specify a delimiter other than the Tab character (not applicable for FASTA files). The parameter file path is optional. " &
+                "If included, it should point to a valid XML parameter file."))
             Console.WriteLine()
 
-            Console.WriteLine("Use /S to process all valid files in the input folder and subfolders. Include a number after /S (like /S:2) to limit the level of subfolders to examine. " &
-                              "When using /S, you can redirect the output of the results using /A. " &
-                              "When using /S, you can use /R to re-create the input folder hierarchy in the alternate output folder (if defined).")
+            Console.WriteLine(ConsoleMsgUtils.WrapParagraph(
+                "Use /S to process all valid files in the input folder and subdirectories. " &
+                "Include a number after /S (like /S:2) to limit the level of subdirectories to examine. " &
+                "When using /S, you can redirect the output of the results using /A. " &
+                "When using /S, you can use /R to re-create the input folder hierarchy in the alternate output folder (if defined)."))
 
             Console.WriteLine("Use /L to log messages to a file.")
             Console.WriteLine()
