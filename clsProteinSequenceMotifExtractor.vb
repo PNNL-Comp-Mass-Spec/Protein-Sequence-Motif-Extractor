@@ -19,6 +19,8 @@ Imports ProteinFileReader
 Public Class clsProteinSequenceMotifExtractor
     Inherits ProcessFilesBase
 
+    ' Ignore Spelling: Regex
+
     Public Sub New()
         mFileDate = "October 6, 2021"
         InitializeLocalVariables()
