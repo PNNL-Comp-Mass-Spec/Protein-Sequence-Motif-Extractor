@@ -159,7 +159,7 @@ Module modMain
 
     End Function
 
-    Private Sub DisplayProgressPercent(ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
+    Private Sub DisplayProgressPercent(intPercentComplete As Integer, blnAddCarriageReturn As Boolean)
         If blnAddCarriageReturn Then
             Console.WriteLine()
         End If
@@ -241,7 +241,7 @@ Module modMain
 
     End Function
 
-    Private Sub ShowErrorMessage(ByVal strMessage As String)
+    Private Sub ShowErrorMessage(strMessage As String)
         Dim strSeparator As String = "------------------------------------------------------------------------------"
 
         Console.WriteLine()

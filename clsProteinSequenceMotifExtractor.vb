@@ -20,7 +20,7 @@ Public Class clsProteinSequenceMotifExtractor
     Inherits ProcessFilesBase
 
     Public Sub New()
-        MyBase.mFileDate = "November 1, 2013"
+        mFileDate = "October 6, 2021"
         InitializeLocalVariables()
     End Sub
 
@@ -100,7 +100,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mAssumeDelimitedFile
         End Get
-        Set(ByVal Value As Boolean)
+        Set
             mAssumeDelimitedFile = Value
         End Set
     End Property
@@ -109,7 +109,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mAssumeFastaFile
         End Get
-        Set(ByVal Value As Boolean)
+        Set
             mAssumeFastaFile = Value
         End Set
     End Property
@@ -127,7 +127,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mInputFileDelimiter
         End Get
-        Set(ByVal Value As Char)
+        Set(Value As Char)
             If Not Value = Nothing Then
                 mInputFileDelimiter = Value
             End If
@@ -156,8 +156,8 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mKeepModSymbols
         End Get
-        Set(ByVal value As Boolean)
-            mKeepModSymbols = value
+        Set
+            mKeepModSymbols = Value
         End Set
     End Property
 
@@ -171,7 +171,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mMotif
         End Get
-        Set(ByVal value As String)
+        Set(value As String)
             If Not value Is Nothing AndAlso value.Length > 0 Then
                 mMotif = value
             End If
@@ -182,8 +182,8 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mOutputMotifsAsDelimitedTextFile
         End Get
-        Set(ByVal value As Boolean)
-            mOutputMotifsAsDelimitedTextFile = value
+        Set
+            mOutputMotifsAsDelimitedTextFile = Value
         End Set
     End Property
 
@@ -197,7 +197,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mPrefixResidueCount
         End Get
-        Set(ByVal value As Integer)
+        Set(value As Integer)
             If value < 0 Then value = 0
             mPrefixResidueCount = value
         End Set
@@ -207,8 +207,8 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mRegexMotif
         End Get
-        Set(ByVal value As Boolean)
-            mRegexMotif = value
+        Set
+            mRegexMotif = Value
         End Set
     End Property
 
@@ -216,7 +216,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mSuffixResidueCount
         End Get
-        Set(ByVal value As Integer)
+        Set(value As Integer)
             If value < 0 Then value = 0
             mSuffixResidueCount = value
         End Set
@@ -233,19 +233,19 @@ Public Class clsProteinSequenceMotifExtractor
     ''' <param name="strMotif">Text to find; if blank, then will use reMotif</param>
     ''' <param name="reMotif">Regex to use (only used if strMotif is blank)</param>
     ''' <remarks></remarks>
-    Protected Sub FindMatchingMotifs(ByRef swMotifsOutputFile As IO.StreamWriter,
-                                     ByVal blnOutputAsDelimitedText As Boolean,
+    Protected Sub FindMatchingMotifs(ByRef swMotifsOutputFile As StreamWriter,
+                                     blnOutputAsDelimitedText As Boolean,
                                      ByRef udtProtein As udtProteinInfoType,
-                                     ByVal strMotif As String,
-                                     ByRef reMotif As Text.RegularExpressions.Regex)
+                                     strMotif As String,
+                                     ByRef reMotif As Regex)
 
-        Static sbResidues As New Text.StringBuilder
+        Static sbResidues As New StringBuilder
 
         Dim blnUseRegex As Boolean
         Dim strProteinSequence As String
         Dim intProteinSequenceLength As Integer
 
-        Dim reMatch As Text.RegularExpressions.Match
+        Dim reMatch As Match
 
         Dim intIndex As Integer
         Dim intProteinSeqIndex As Integer
@@ -456,7 +456,7 @@ Public Class clsProteinSequenceMotifExtractor
                     strErrorMessage = "Unknown error state"
             End Select
         Else
-            strErrorMessage = MyBase.GetBaseClassErrorMessage()
+            strErrorMessage = GetBaseClassErrorMessage()
         End If
 
         Return strErrorMessage
@@ -488,10 +488,10 @@ Public Class clsProteinSequenceMotifExtractor
 
     End Sub
 
-    Public Shared Function IsFastaFile(ByVal strFilePath As String) As Boolean
+    Public Shared Function IsFastaFile(strFilePath As String) As Boolean
         ' Examines the file's extension and true if it ends in .fasta
 
-        If IO.Path.GetExtension(strFilePath).ToLower = ".fasta" Then
+        If Path.GetExtension(strFilePath).ToLower = ".fasta" Then
             Return True
         Else
             Return False
@@ -499,7 +499,7 @@ Public Class clsProteinSequenceMotifExtractor
 
     End Function
 
-    Public Function LoadParameterFileSettings(ByVal strParameterFilePath As String) As Boolean
+    Public Function LoadParameterFileSettings(strParameterFilePath As String) As Boolean
 
         Dim objSettingsFile As New XmlSettingsFileAccessor
 
@@ -512,7 +512,7 @@ Public Class clsProteinSequenceMotifExtractor
                 Return True
             End If
 
-            If Not IO.File.Exists(strParameterFilePath) Then
+            If Not File.Exists(strParameterFilePath) Then
                 ' See if strParameterFilePath points to a file in the same directory as the application
                 strParameterFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Path.GetFileName(strParameterFilePath))
                 If Not File.Exists(strParameterFilePath) Then
@@ -557,7 +557,7 @@ Public Class clsProteinSequenceMotifExtractor
 
     End Function
 
-    Public Shared Function LookupColumnDelimiterChar(ByVal intDelimiterIndex As Integer, ByVal strCustomDelimiter As String, ByVal strDefaultDelimiter As Char) As Char
+    Public Shared Function LookupColumnDelimiterChar(intDelimiterIndex As Integer, strCustomDelimiter As String, strDefaultDelimiter As Char) As Char
 
         Dim strDelimiter As String
 
@@ -645,15 +645,15 @@ Public Class clsProteinSequenceMotifExtractor
                 ' Define the output file name
                 strOutputFileName = String.Empty
                 If Not strOutputFileNameBaseOverride Is Nothing AndAlso strOutputFileNameBaseOverride.Length > 0 Then
-                    If IO.Path.HasExtension(strOutputFileNameBaseOverride) Then
+                    If Path.HasExtension(strOutputFileNameBaseOverride) Then
                         strOutputFileName = String.Copy(strOutputFileNameBaseOverride)
 
                         If mOutputMotifsAsDelimitedTextFile Then
-                            If IO.Path.GetExtension(strOutputFileName).Length > 4 Then
+                            If Path.GetExtension(strOutputFileName).Length > 4 Then
                                 strOutputFileName &= ".txt"
                             End If
                         Else
-                            If IO.Path.GetExtension(strOutputFileName).ToLower <> ".fasta" Then
+                            If Path.GetExtension(strOutputFileName).ToLower <> ".fasta" Then
                                 strOutputFileName &= ".fasta"
                             End If
                         End If
@@ -669,27 +669,27 @@ Public Class clsProteinSequenceMotifExtractor
                 If strOutputFileName.Length = 0 Then
                     ' Output file name is not defined; auto-define it
                     If mOutputMotifsAsDelimitedTextFile Then
-                        strOutputFileName = IO.Path.GetFileNameWithoutExtension(strInputFilePath) & "_Motifs.txt"
+                        strOutputFileName = Path.GetFileNameWithoutExtension(strInputFilePath) & "_Motifs.txt"
                     Else
-                        strOutputFileName = IO.Path.GetFileNameWithoutExtension(strInputFilePath) & "_Motifs.fasta"
+                        strOutputFileName = Path.GetFileNameWithoutExtension(strInputFilePath) & "_Motifs.fasta"
                     End If
                 End If
 
                 ' Make sure the output file isn't the same as the input file
-                If IO.Path.GetFileName(strInputFilePath).ToLower = IO.Path.GetFileName(strOutputFileName).ToLower Then
-                    strOutputFileName = IO.Path.GetFileNameWithoutExtension(strOutputFileName) & "_new" & IO.Path.GetExtension(strOutputFileName)
+                If Path.GetFileName(strInputFilePath).ToLower = Path.GetFileName(strOutputFileName).ToLower Then
+                    strOutputFileName = Path.GetFileNameWithoutExtension(strOutputFileName) & "_new" & Path.GetExtension(strOutputFileName)
                 End If
 
                 If strOutputFolderPath Is Nothing OrElse strOutputFolderPath.Length = 0 Then
                     ' This code likely won't be reached since CleanupFilePaths() should have already initialized strOutputFolderPath
-                    Dim fiInputFile As IO.FileInfo
-                    fiInputFile = New IO.FileInfo(strInputFilePath)
+                    Dim fiInputFile As FileInfo
+                    fiInputFile = New FileInfo(strInputFilePath)
 
                     strOutputFolderPath = fiInputFile.Directory.FullName
                 End If
 
                 ' Define the full path to output file
-                strOutputMotifsFilePath = IO.Path.Combine(strOutputFolderPath, strOutputFileName)
+                strOutputMotifsFilePath = Path.Combine(strOutputFolderPath, strOutputFileName)
 
                 blnSuccess = True
             End If
@@ -704,7 +704,7 @@ Public Class clsProteinSequenceMotifExtractor
 
     End Function
 
-    Public Function ParseProteinFile(ByVal strProteinInputFilePath As String, ByVal strOutputFolderPath As String) As Boolean
+    Public Function ParseProteinFile(strProteinInputFilePath As String, strOutputFolderPath As String) As Boolean
         Return ParseProteinFile(strProteinInputFilePath, strOutputFolderPath, String.Empty)
     End Function
 
@@ -717,14 +717,14 @@ Public Class clsProteinSequenceMotifExtractor
     ''' <param name="strOutputFileNameBaseOverride"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Function ParseProteinFile(ByVal strProteinInputFilePath As String,
-                                     ByVal strOutputFolderPath As String,
-                                     ByVal strOutputFileNameBaseOverride As String) As Boolean
+    Public Function ParseProteinFile(strProteinInputFilePath As String,
+                                     strOutputFolderPath As String,
+                                     strOutputFileNameBaseOverride As String) As Boolean
         ' If strOutputFileNameBaseOverride is defined, then uses that name for the protein output filename rather than auto-defining the name
 
-        Dim objProteinFileReader As ProteinFileReader.ProteinFileReaderBaseClass = Nothing
+        Dim objProteinFileReader As ProteinFileReaderBaseClass = Nothing
 
-        Dim swMotifsOutputFile As IO.StreamWriter = Nothing
+        Dim swMotifsOutputFile As StreamWriter = Nothing
 
         Dim strLineOut As String = String.Empty
 
@@ -736,7 +736,7 @@ Public Class clsProteinSequenceMotifExtractor
 
         Dim udtProtein As udtProteinInfoType
         Dim strMotif As String
-        Dim reMotif As Text.RegularExpressions.Regex = Nothing
+        Dim reMotif As Regex = Nothing
 
         Dim strMessage As String
 
@@ -756,7 +756,7 @@ Public Class clsProteinSequenceMotifExtractor
             ' Create the output file
             Try
                 ' This will cause an error if the input file is the same as the output file
-                swMotifsOutputFile = New IO.StreamWriter(New IO.FileStream(strOutputMotifsFilePath, IO.FileMode.Create, IO.FileAccess.Write, IO.FileShare.Read))
+                swMotifsOutputFile = New StreamWriter(New FileStream(strOutputMotifsFilePath, FileMode.Create, FileAccess.Write, FileShare.Read))
                 blnSuccess = True
             Catch ex As Exception
                 SetLocalErrorCode(eMotifExtractorErrorCodes.ErrorCreatingMotifsOutputFile)
@@ -781,7 +781,7 @@ Public Class clsProteinSequenceMotifExtractor
                 ' Initialize the Motif Regex
                 ' Note that we are creating a case-sensitive RegEx
                 Try
-                    reMotif = New Text.RegularExpressions.Regex(mMotif, Text.RegularExpressions.RegexOptions.Compiled Or Text.RegularExpressions.RegexOptions.Singleline)
+                    reMotif = New Regex(mMotif, RegexOptions.Compiled Or RegexOptions.Singleline)
                 Catch ex As Exception
                     HandleException("Error initializing the RegEx-based Motif using " & mMotif, ex)
                     SetLocalErrorCode(eMotifExtractorErrorCodes.InvalidMotif)
@@ -868,10 +868,10 @@ Public Class clsProteinSequenceMotifExtractor
     End Function
 
     ' Main processing function -- Calls ParseProteinFile
-    Public Overloads Overrides Function ProcessFile(ByVal strInputFilePath As String, ByVal strOutputFolderPath As String, ByVal strParameterFilePath As String, ByVal blnResetErrorCode As Boolean) As Boolean
+    Public Overloads Overrides Function ProcessFile(strInputFilePath As String, strOutputFolderPath As String, strParameterFilePath As String, blnResetErrorCode As Boolean) As Boolean
         ' Returns True if success, False if failure
 
-        Dim ioFile As IO.FileInfo
+        Dim ioFile As FileInfo
         Dim strInputFilePathFull As String
 
         Dim blnSuccess As Boolean
@@ -896,18 +896,18 @@ Public Class clsProteinSequenceMotifExtractor
             Else
 
                 Console.WriteLine()
-                Console.WriteLine("Parsing " & IO.Path.GetFileName(strInputFilePath))
+                Console.WriteLine("Parsing " & Path.GetFileName(strInputFilePath))
 
                 ' Note that CleanupFilePaths() will update mOutputFolderPath, which is used by LogMessage()
                 If Not CleanupFilePaths(strInputFilePath, strOutputFolderPath) Then
                     SetBaseClassErrorCode(ProcessFilesErrorCodes.FilePathError)
                 Else
 
-                    MyBase.ResetProgress()
+                    ResetProgress()
 
                     Try
                         ' Obtain the full path to the input file
-                        ioFile = New IO.FileInfo(strInputFilePath)
+                        ioFile = New FileInfo(strInputFilePath)
                         strInputFilePathFull = ioFile.FullName
 
                         blnSuccess = ParseProteinFile(strInputFilePathFull, strOutputFolderPath)
@@ -933,11 +933,11 @@ Public Class clsProteinSequenceMotifExtractor
 
     End Function
 
-    Private Sub SetLocalErrorCode(ByVal eNewErrorCode As eMotifExtractorErrorCodes)
+    Private Sub SetLocalErrorCode(eNewErrorCode As eMotifExtractorErrorCodes)
         SetLocalErrorCode(eNewErrorCode, False)
     End Sub
 
-    Private Sub SetLocalErrorCode(ByVal eNewErrorCode As eMotifExtractorErrorCodes, ByVal blnLeaveExistingErrorCodeUnchanged As Boolean)
+    Private Sub SetLocalErrorCode(eNewErrorCode As eMotifExtractorErrorCodes, blnLeaveExistingErrorCodeUnchanged As Boolean)
 
         If blnLeaveExistingErrorCodeUnchanged AndAlso mLocalErrorCode <> eMotifExtractorErrorCodes.NoError Then
             ' An error code is already defined; do not change it
@@ -979,7 +979,7 @@ Public Class clsProteinSequenceMotifExtractor
             Get
                 Return mReadonlyClass
             End Get
-            Set(ByVal Value As Boolean)
+            Set
                 If Not mReadonlyClass Then
                     mReadonlyClass = Value
                 End If
@@ -990,7 +990,7 @@ Public Class clsProteinSequenceMotifExtractor
             Get
                 Return mLookForAddnlRefInDescription
             End Get
-            Set(ByVal Value As Boolean)
+            Set
                 If Not mReadonlyClass Then
                     mLookForAddnlRefInDescription = Value
                 End If
@@ -1001,7 +1001,7 @@ Public Class clsProteinSequenceMotifExtractor
             Get
                 Return mAddnlRefSepChar
             End Get
-            Set(ByVal Value As Char)
+            Set
                 If Not Value = Nothing AndAlso Not mReadonlyClass Then
                     mAddnlRefSepChar = Value
                 End If
@@ -1012,7 +1012,7 @@ Public Class clsProteinSequenceMotifExtractor
             Get
                 Return mAddnlRefAccessionSepChar
             End Get
-            Set(ByVal Value As Char)
+            Set(Value As Char)
                 If Not Value = Nothing AndAlso Not mReadonlyClass Then
                     mAddnlRefAccessionSepChar = Value
                 End If
