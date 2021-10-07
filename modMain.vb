@@ -40,7 +40,7 @@ Imports ProteinFileReader
 
 Module modMain
 
-    Public Const PROGRAM_DATE As String = "October 6, 2021"
+    Public Const PROGRAM_DATE As String = "October 7, 2021"
 
     Private mInputFilePath As String
     Private mAssumeFastaFile As Boolean
@@ -172,9 +172,7 @@ Module modMain
     End Sub
 
     Private Function GetAppVersion() As String
-        'Return System.Windows.Forms.Application.ProductVersion & " (" & PROGRAM_DATE & ")"
-
-        Return System.Reflection.Assembly.GetExecutingAssembly.GetName.Version.ToString & " (" & PROGRAM_DATE & ")"
+        Return ProcessFilesOrDirectoriesBase.GetAppVersion(PROGRAM_DATE)
     End Function
 
     Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
