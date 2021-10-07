@@ -108,7 +108,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mDelimitedInputFileFormatCode
         End Get
-        Set(Value As DelimitedProteinFileReader.ProteinFileFormatCode)
+        Set
             mDelimitedInputFileFormatCode = Value
         End Set
     End Property
@@ -117,7 +117,7 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mInputFileDelimiter
         End Get
-        Set(Value As Char)
+        Set
             If Not Value = Nothing Then
                 mInputFileDelimiter = Value
             End If
@@ -161,9 +161,9 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mMotif
         End Get
-        Set(value As String)
-            If Not value Is Nothing AndAlso value.Length > 0 Then
-                mMotif = value
+        Set
+            If Not Value Is Nothing AndAlso Value.Length > 0 Then
+                mMotif = Value
             End If
         End Set
     End Property
@@ -187,9 +187,9 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mPrefixResidueCount
         End Get
-        Set(value As Integer)
-            If value < 0 Then value = 0
-            mPrefixResidueCount = value
+        Set
+            If Value < 0 Then Value = 0
+            mPrefixResidueCount = Value
         End Set
     End Property
 
@@ -206,9 +206,9 @@ Public Class clsProteinSequenceMotifExtractor
         Get
             Return mSuffixResidueCount
         End Get
-        Set(value As Integer)
-            If value < 0 Then value = 0
-            mSuffixResidueCount = value
+        Set
+            If Value < 0 Then Value = 0
+            mSuffixResidueCount = Value
         End Set
     End Property
 
@@ -714,11 +714,9 @@ Public Class clsProteinSequenceMotifExtractor
 
         Dim swMotifsOutputFile As StreamWriter = Nothing
 
-        Dim strLineOut As String = String.Empty
-
         Dim strOutputMotifsFilePath As String = String.Empty
 
-        Dim blnSuccess As Boolean = False
+        Dim blnSuccess = False
         Dim blnInputProteinFound As Boolean
         Dim blnUseUniqueIDValuesFromInputFile As Boolean
 
@@ -785,7 +783,7 @@ Public Class clsProteinSequenceMotifExtractor
 
             If mOutputMotifsAsDelimitedTextFile Then
                 ' Write the header line to the output file
-                strLineOut = "Protein" & ControlChars.Tab & "Motif" & ControlChars.Tab & "ResidueStartLoc" & ControlChars.Tab & "Residues"
+                Dim strLineOut = "Protein" & ControlChars.Tab & "Motif" & ControlChars.Tab & "ResidueStartLoc" & ControlChars.Tab & "Residues"
                 swMotifsOutputFile.WriteLine(strLineOut)
             End If
 

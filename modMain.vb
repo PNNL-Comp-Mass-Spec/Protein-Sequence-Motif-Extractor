@@ -1,6 +1,10 @@
 ﻿Option Strict On
 
+Imports System.IO
+Imports System.Reflection
+Imports System.Threading
 Imports PRISM
+Imports PRISM.FileProcessor
 Imports ProteinFileReader
 
 ' This program can be used to read a FASTA file or tab delimited file
@@ -64,7 +68,7 @@ Module modMain
     Private mLogMessagesToFile As Boolean
 
     Private WithEvents mMotifExtractor As clsProteinSequenceMotifExtractor
-    Private mLastProgressReportTime As System.DateTime
+    Private mLastProgressReportTime As Date
     Private mLastProgressReportValue As Integer
 
     Public Function Main() As Integer
@@ -239,7 +243,7 @@ Module modMain
     End Function
 
     Private Sub ShowErrorMessage(strMessage As String)
-        Dim strSeparator As String = "------------------------------------------------------------------------------"
+        Dim strSeparator = "------------------------------------------------------------------------------"
 
         Console.WriteLine()
         Console.WriteLine(strSeparator)
@@ -258,7 +262,7 @@ Module modMain
             Console.WriteLine()
 
             Console.WriteLine("Program syntax:")
-            Console.WriteLine(System.IO.Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location) &
+            Console.WriteLine(Path.GetFileName(Assembly.GetExecutingAssembly().Location) &
                               " /I:SourceFastaOrTextFile [/O:OutputFolderPath] [/T]")
             Console.WriteLine(" [/F] [/M:Motif] [/X] [/N:NumberOfFlankingResidues] [/K]")
             Console.WriteLine(" [/AD:AlternateDelimiter] [/P:ParameterFilePath] ")
@@ -305,7 +309,7 @@ Module modMain
             Console.WriteLine()
 
             ' Delay for 750 msec in case the user double clicked this file from within Windows Explorer (or started the program via a shortcut)
-            System.Threading.Thread.Sleep(750)
+            Thread.Sleep(750)
 
         Catch ex As Exception
             ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
@@ -314,8 +318,8 @@ Module modMain
     End Sub
 
     Private Sub mMotifExtractor_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mMotifExtractor.ProgressUpdate
-        Const PERCENT_REPORT_INTERVAL As Integer = 25
-        Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
+        Const PERCENT_REPORT_INTERVAL = 25
+        Const PROGRESS_DOT_INTERVAL_MSEC = 250
 
         If percentComplete >= mLastProgressReportValue Then
             If mLastProgressReportValue > 0 Then
@@ -323,17 +327,17 @@ Module modMain
             End If
             DisplayProgressPercent(mLastProgressReportValue, False)
             mLastProgressReportValue += PERCENT_REPORT_INTERVAL
-            mLastProgressReportTime = DateTime.UtcNow
+            mLastProgressReportTime = Date.UtcNow
         Else
-            If DateTime.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
-                mLastProgressReportTime = DateTime.UtcNow
+            If Date.UtcNow.Subtract(mLastProgressReportTime).TotalMilliseconds > PROGRESS_DOT_INTERVAL_MSEC Then
+                mLastProgressReportTime = Date.UtcNow
                 Console.Write(".")
             End If
         End If
     End Sub
 
     Private Sub mMotifExtractor_ProgressReset() Handles mMotifExtractor.ProgressReset
-        mLastProgressReportTime = DateTime.UtcNow
+        mLastProgressReportTime = Date.UtcNow
         mLastProgressReportValue = 0
     End Sub
 End Module
