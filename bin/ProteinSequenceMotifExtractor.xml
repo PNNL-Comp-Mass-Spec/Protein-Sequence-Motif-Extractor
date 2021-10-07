@@ -6,6 +6,29 @@ ProteinSequenceMotifExtractor
 </name>
 </assembly>
 <members>
+<member name="M:ProteinSequenceMotifExtractor.FastaFileOptionsClass.#ctor">
+ <summary>
+ Constructor
+ </summary>
+</member>
+<member name="P:ProteinSequenceMotifExtractor.FastaFileOptionsClass.LookForAddnlRefInDescription">
+ <summary>
+ When true, look for additional references in the protein description
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:ProteinSequenceMotifExtractor.FastaFileOptionsClass.AddnlRefSepChar">
+ <summary>
+ Additional reference separation character
+ </summary>
+ <returns></returns>
+</member>
+<member name="P:ProteinSequenceMotifExtractor.FastaFileOptionsClass.AddnlRefAccessionSepChar">
+ <summary>
+ Additional reference accession separation character
+ </summary>
+ <returns></returns>
+</member>
 <member name="F:ProteinSequenceMotifExtractor.clsProteinSequenceMotifExtractor.PROTEIN_LINE_START_CHAR">
  <summary>
  Each protein description line in the FASTA file should start with a > symbol
@@ -23,8 +46,8 @@ ProteinSequenceMotifExtractor
  <param name="swMotifsOutputFile">File to write out the results</param>
  <param name="blnOutputAsDelimitedText">If True, then writing to a delimited text file; otherwise, writing to a .Fasta file</param>
  <param name="udtProtein">Protein info</param>
- <param name="strMotif">Text to find; if blank, then will use reMotif</param>
- <param name="reMotif">Regex to use (only used if strMotif is blank)</param>
+ <param name="strMotif">Text to find (case-sensitive); if blank, will use reMotif</param>
+ <param name="reMotif">Regular expression to use (only used if strMotif is blank)</param>
  <remarks></remarks>
 </member>
 <member name="M:ProteinSequenceMotifExtractor.clsProteinSequenceMotifExtractor.ParseProteinFile(System.String,System.String,System.String)">
