@@ -71,6 +71,12 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="PRISM-Library">
+      <Version>2.6.37</Version>
+    </PackageReference>
+    <PackageReference Include="ProteinFileReader">
+      <Version>2.0.6</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
