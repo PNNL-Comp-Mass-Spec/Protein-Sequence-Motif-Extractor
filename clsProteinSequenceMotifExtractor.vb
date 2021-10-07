@@ -405,13 +405,13 @@ Public Class clsProteinSequenceMotifExtractor
 
     End Sub
 
-    Public Overrides Function GetDefaultExtensionsToParse() As String()
-        Dim strExtensionsToParse(1) As String
+    Public Overrides Function GetDefaultExtensionsToParse() As IList(Of String)
+        Dim extensionsToParse = New List(Of String)
 
-        strExtensionsToParse(0) = ".fasta"
-        strExtensionsToParse(1) = ".txt"
+        extensionsToParse.Add(".fasta")
+        extensionsToParse.Add(".txt")
 
-        Return strExtensionsToParse
+        Return extensionsToParse
 
     End Function
 
@@ -420,8 +420,8 @@ Public Class clsProteinSequenceMotifExtractor
 
         Dim strErrorMessage As String
 
-        If MyBase.ErrorCode = clsProcessFilesBaseClass.eProcessFilesErrorCodes.LocalizedError Or
-           MyBase.ErrorCode = clsProcessFilesBaseClass.eProcessFilesErrorCodes.NoError Then
+        If ErrorCode = ProcessFilesErrorCodes.LocalizedError Or
+           ErrorCode = ProcessFilesErrorCodes.NoError Then
             Select Case mLocalErrorCode
                 Case eMotifExtractorErrorCodes.NoError
                     strErrorMessage = ""
@@ -514,9 +514,9 @@ Public Class clsProteinSequenceMotifExtractor
 
             If Not IO.File.Exists(strParameterFilePath) Then
                 ' See if strParameterFilePath points to a file in the same directory as the application
-                strParameterFilePath = IO.Path.Combine(IO.Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location), IO.Path.GetFileName(strParameterFilePath))
-                If Not IO.File.Exists(strParameterFilePath) Then
-                    MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.ParameterFileNotFound)
+                strParameterFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Path.GetFileName(strParameterFilePath))
+                If Not File.Exists(strParameterFilePath) Then
+                    SetBaseClassErrorCode(ProcessFilesErrorCodes.ParameterFileNotFound)
                     Return False
                 End If
             End If
@@ -524,7 +524,7 @@ Public Class clsProteinSequenceMotifExtractor
             If objSettingsFile.LoadSettings(strParameterFilePath) Then
                 If Not objSettingsFile.SectionPresent(XML_SECTION_OPTIONS) Then
                     ShowErrorMessage("The node '<section name=""" & XML_SECTION_OPTIONS & """> was not found in the parameter file: " & strParameterFilePath)
-                    MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.InvalidParameterFile)
+                    SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidParameterFile)
                     Return False
                 Else
 
@@ -601,7 +601,7 @@ Public Class clsProteinSequenceMotifExtractor
         Try
 
             If strInputFilePath Is Nothing OrElse strInputFilePath.Length = 0 Then
-                SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.InvalidInputFilePath)
+                SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath)
             Else
 
                 ' Determine whether the input file is a .Fasta file or a tab delimited text ifle
@@ -616,8 +616,8 @@ Public Class clsProteinSequenceMotifExtractor
                 End If
 
                 ' Verify that the input file exists
-                If Not IO.File.Exists(strInputFilePath) Then
-                    MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.InvalidInputFilePath)
+                If Not File.Exists(strInputFilePath) Then
+                    SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath)
                     blnSuccess = False
                     Exit Try
                 End If
@@ -883,8 +883,8 @@ Public Class clsProteinSequenceMotifExtractor
         If Not LoadParameterFileSettings(strParameterFilePath) Then
             ShowErrorMessage("Parameter file load error: " & strParameterFilePath)
 
-            If MyBase.ErrorCode = clsProcessFilesBaseClass.eProcessFilesErrorCodes.NoError Then
-                MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.InvalidParameterFile)
+            If ErrorCode = ProcessFilesErrorCodes.NoError Then
+                SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidParameterFile)
             End If
             Return False
         End If
@@ -892,7 +892,7 @@ Public Class clsProteinSequenceMotifExtractor
         Try
             If strInputFilePath Is Nothing OrElse strInputFilePath.Length = 0 Then
                 ShowMessage("Input file name is empty")
-                MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.InvalidInputFilePath)
+                SetBaseClassErrorCode(ProcessFilesErrorCodes.InvalidInputFilePath)
             Else
 
                 Console.WriteLine()
@@ -900,7 +900,7 @@ Public Class clsProteinSequenceMotifExtractor
 
                 ' Note that CleanupFilePaths() will update mOutputFolderPath, which is used by LogMessage()
                 If Not CleanupFilePaths(strInputFilePath, strOutputFolderPath) Then
-                    MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.FilePathError)
+                    SetBaseClassErrorCode(ProcessFilesErrorCodes.FilePathError)
                 Else
 
                     MyBase.ResetProgress()
@@ -945,11 +945,11 @@ Public Class clsProteinSequenceMotifExtractor
             mLocalErrorCode = eNewErrorCode
 
             If eNewErrorCode = eMotifExtractorErrorCodes.NoError Then
-                If MyBase.ErrorCode = clsProcessFilesBaseClass.eProcessFilesErrorCodes.LocalizedError Then
-                    MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.NoError)
+                If ErrorCode = ProcessFilesErrorCodes.LocalizedError Then
+                    SetBaseClassErrorCode(ProcessFilesErrorCodes.NoError)
                 End If
             Else
-                MyBase.SetBaseClassErrorCode(clsProcessFilesBaseClass.eProcessFilesErrorCodes.LocalizedError)
+                SetBaseClassErrorCode(ProcessFilesErrorCodes.LocalizedError)
             End If
         End If
 
