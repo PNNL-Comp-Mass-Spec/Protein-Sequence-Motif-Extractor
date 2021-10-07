@@ -31,6 +31,16 @@ Public Class clsProteinSequenceMotifExtractor
     Public Const DEFAULT_PREFIX_RESIDUE_COUNT As Integer = 30
     Public Const DEFAULT_SUFFIX_RESIDUE_COUNT As Integer = 30
 
+    ''' <summary>
+    ''' Each protein description line in the FASTA file should start with a > symbol
+    ''' </summary>
+    Private Const PROTEIN_LINE_START_CHAR As Char = ">"c
+
+    ''' <summary>
+    ''' Character that denotes the end of the protein name
+    ''' </summary>
+    Private Const PROTEIN_LINE_ACCESSION_TERMINATOR As Char = " "c
+
     ' Error codes specialized for this class
     Public Enum eMotifExtractorErrorCodes
         NoError = 0
@@ -376,9 +386,9 @@ Public Class clsProteinSequenceMotifExtractor
                                                      intResidueLoc & ControlChars.Tab &
                                                      sbResidues.ToString)
                     Else
-                        ' Fasta format
-                        swMotifsOutputFile.WriteLine(FastaFileOptions.ProteinLineStartChar & udtProtein.Name &
-                                                     FastaFileOptions.ProteinLineAccessionEndChar & udtProtein.Description)
+                        ' FASTA format
+                        swMotifsOutputFile.WriteLine(PROTEIN_LINE_START_CHAR & udtProtein.Name &
+                                                     PROTEIN_LINE_ACCESSION_TERMINATOR & udtProtein.Description)
                         swMotifsOutputFile.WriteLine(sbResidues.ToString)
                     End If
 
@@ -949,9 +959,6 @@ Public Class clsProteinSequenceMotifExtractor
     Public Class FastaFileOptionsClass
 
         Public Sub New()
-            mProteinLineStartChar = ">"c
-            mProteinLineAccessionEndChar = " "c
-
             mLookForAddnlRefInDescription = False
             mAddnlRefSepChar = "|"c
             mAddnlRefAccessionSepChar = ":"c
@@ -959,9 +966,6 @@ Public Class clsProteinSequenceMotifExtractor
 
 #Region "Classwide Variables"
         Private mReadonlyClass As Boolean
-
-        Private mProteinLineStartChar As Char
-        Private mProteinLineAccessionEndChar As Char
 
         Private mLookForAddnlRefInDescription As Boolean
 
@@ -978,28 +982,6 @@ Public Class clsProteinSequenceMotifExtractor
             Set(ByVal Value As Boolean)
                 If Not mReadonlyClass Then
                     mReadonlyClass = Value
-                End If
-            End Set
-        End Property
-
-        Public Property ProteinLineStartChar() As Char
-            Get
-                Return mProteinLineStartChar
-            End Get
-            Set(ByVal Value As Char)
-                If Not Value = Nothing AndAlso Not mReadonlyClass Then
-                    mProteinLineStartChar = Value
-                End If
-            End Set
-        End Property
-
-        Public Property ProteinLineAccessionEndChar() As Char
-            Get
-                Return mProteinLineAccessionEndChar
-            End Get
-            Set(ByVal Value As Char)
-                If Not Value = Nothing AndAlso Not mReadonlyClass Then
-                    mProteinLineAccessionEndChar = Value
                 End If
             End Set
         End Property
