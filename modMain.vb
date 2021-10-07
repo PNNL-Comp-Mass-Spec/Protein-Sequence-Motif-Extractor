@@ -4,7 +4,7 @@
 ' containing protein sequences. It then looks for the specified motif in each protein sequence
 ' and creates a new file containing the regions of the protein that contain the specified motif
 '
-' Example command line to look for motif K# in file Proteins.fasta and includes 30 residues 
+' Example command line to look for motif K# in file Proteins.fasta and includes 30 residues
 '  to the left and the right of the matching motif:
 '  ProteinSequenceMotifExtractor.exe /I:Proteins.fasta /M:K# /N:30
 '
@@ -17,18 +17,18 @@
 ' E-mail: matthew.monroe@pnl.gov or matt@alchemistmatt.com
 ' Website: http://ncrr.pnl.gov/ or http://www.sysbio.org/resources/staff/
 ' -------------------------------------------------------------------------------
-' 
+'
 ' Licensed under the Apache License, Version 2.0; you may not use this file except
-' in compliance with the License.  You may obtain a copy of the License at 
+' in compliance with the License.  You may obtain a copy of the License at
 ' http://www.apache.org/licenses/LICENSE-2.0
 '
-' Notice: This computer software was prepared by Battelle Memorial Institute, 
-' hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the 
-' Department of Energy (DOE).  All rights in the computer software are reserved 
-' by DOE on behalf of the United States Government and the Contractor as 
-' provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY 
-' WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS 
-' SOFTWARE.  This notice including this sentence must appear on any copies of 
+' Notice: This computer software was prepared by Battelle Memorial Institute,
+' hereinafter the Contractor, under Contract No. DE-AC05-76RL0 1830 with the
+' Department of Energy (DOE).  All rights in the computer software are reserved
+' by DOE on behalf of the United States Government and the Contractor as
+' provided in the Contract.  NEITHER THE GOVERNMENT NOR THE CONTRACTOR MAKES ANY
+' WARRANTY, EXPRESS OR IMPLIED, OR ASSUMES ANY LIABILITY FOR THE USE OF THIS
+' SOFTWARE.  This notice including this sentence must appear on any copies of
 ' this computer software.
 
 Module modMain
@@ -101,9 +101,9 @@ Module modMain
                 If SetOptionsUsingCommandLineParameters(objParseCommandLine) Then blnProceed = True
             End If
 
-            If Not blnProceed OrElse _
-               objParseCommandLine.NeedToShowHelp OrElse _
-               objParseCommandLine.ParameterCount + objParseCommandLine.NonSwitchParameterCount = 0 OrElse _
+            If Not blnProceed OrElse
+               objParseCommandLine.NeedToShowHelp OrElse
+               objParseCommandLine.ParameterCount + objParseCommandLine.NonSwitchParameterCount = 0 OrElse
                mInputFilePath.Length = 0 Then
                 ShowProgramHelp()
                 intReturnCode = -1
@@ -152,7 +152,7 @@ Module modMain
             End If
 
         Catch ex As Exception
-			ShowErrorMessage("Error occurred in modMain->Main: " & ControlChars.NewLine & ex.Message)
+            ShowErrorMessage("Error occurred in modMain->Main: " & ControlChars.NewLine & ex.Message)
             intReturnCode = -1
         End Try
 
@@ -160,16 +160,16 @@ Module modMain
 
     End Function
 
-	Private Sub DisplayProgressPercent(ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
-		If blnAddCarriageReturn Then
-			Console.WriteLine()
-		End If
-		If intPercentComplete > 100 Then intPercentComplete = 100
-		Console.Write("Processing: " & intPercentComplete.ToString & "% ")
-		If blnAddCarriageReturn Then
-			Console.WriteLine()
-		End If
-	End Sub
+    Private Sub DisplayProgressPercent(ByVal intPercentComplete As Integer, ByVal blnAddCarriageReturn As Boolean)
+        If blnAddCarriageReturn Then
+            Console.WriteLine()
+        End If
+        If intPercentComplete > 100 Then intPercentComplete = 100
+        Console.Write("Processing: " & intPercentComplete.ToString & "% ")
+        If blnAddCarriageReturn Then
+            Console.WriteLine()
+        End If
+    End Sub
 
     Private Function GetAppVersion() As String
         'Return System.Windows.Forms.Application.ProductVersion & " (" & PROGRAM_DATE & ")"
@@ -203,7 +203,7 @@ Module modMain
 
                     If .RetrieveValueForParameter("N", strValue) Then
                         If Not Integer.TryParse(strValue, mPrefixResidueCount) Then
-                            ShowErrorMessage("Error parsing number from the /N parameter; use /N:30 to specify " & _
+                            ShowErrorMessage("Error parsing number from the /N parameter; use /N:30 to specify " &
                                              clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT & " residues be included before and after the matching motif")
 
                             mPrefixResidueCount = clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT
@@ -238,7 +238,7 @@ Module modMain
             End If
 
         Catch ex As Exception
-			ShowErrorMessage("Error parsing the command line parameters: " & ControlChars.NewLine & ex.Message)
+            ShowErrorMessage("Error parsing the command line parameters: " & ControlChars.NewLine & ex.Message)
         End Try
 
     End Function
@@ -258,21 +258,21 @@ Module modMain
 
         Try
 
-            Console.WriteLine("This program reads a fasta file or tab delimited file containing protein sequences. " & _
-                              "It then looks for the specified motif in each protein sequence and creates a new file " & _
+            Console.WriteLine("This program reads a fasta file or tab delimited file containing protein sequences. " &
+                              "It then looks for the specified motif in each protein sequence and creates a new file " &
                               "containing the regions of the protein that contain the specified motif.")
             Console.WriteLine()
 
             Console.WriteLine("Program syntax:")
-            Console.WriteLine(System.IO.Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location) & _
+            Console.WriteLine(System.IO.Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location) &
                               " /I:SourceFastaOrTextFile [/O:OutputFolderPath] [/T]")
             Console.WriteLine(" [/F] [/M:Motif] [/X] [/N:NumberOfFlankingResidues] [/K]")
             Console.WriteLine(" [/AD:AlternateDelimeter] [/P:ParameterFilePath] ")
             Console.WriteLine(" [/S:[MaxLevel]] [/A:AlternateOutputFolderPath] [/R] [/L] [/Q]")
             Console.WriteLine()
-            Console.WriteLine("The input file path can contain the wildcard character * and should point to a fasta file or tab-delimited text file (with columns Protein Name, Description, and Sequence). " & _
-                              "The output folder switch is optional.  If omitted, the output file will be created in the same folder as the input file. " & _
-                              "By default, the output file will be a .Fasta file; use /T to instead create a tab-delimited text file. " & _
+            Console.WriteLine("The input file path can contain the wildcard character * and should point to a fasta file or tab-delimited text file (with columns Protein Name, Description, and Sequence). " &
+                              "The output folder switch is optional.  If omitted, the output file will be created in the same folder as the input file. " &
+                              "By default, the output file will be a .Fasta file; use /T to instead create a tab-delimited text file. " &
                               "Use /F to indicate that the input file is a fasta file.  If /F is not used, then the format will be assumed to be fasta only if the file contains .fasta in the name.")
             Console.WriteLine()
 
@@ -285,8 +285,8 @@ Module modMain
             Console.WriteLine("Use /AD to specify a delimiter other than the Tab character (not applicable for fasta files). The parameter file path is optional.  If included, it should point to a valid XML parameter file.")
             Console.WriteLine()
 
-            Console.WriteLine("Use /S to process all valid files in the input folder and subfolders. Include a number after /S (like /S:2) to limit the level of subfolders to examine. " & _
-                              "When using /S, you can redirect the output of the results using /A. " & _
+            Console.WriteLine("Use /S to process all valid files in the input folder and subfolders. Include a number after /S (like /S:2) to limit the level of subfolders to examine. " &
+                              "When using /S, you can redirect the output of the results using /A. " &
                               "When using /S, you can use /R to re-create the input folder hierarchy in the alternate output folder (if defined).")
 
             Console.WriteLine("Use /L to log messages to a file.  If /Q is used, then no messages will be displayed at the console.")
@@ -304,7 +304,7 @@ Module modMain
             System.Threading.Thread.Sleep(750)
 
         Catch ex As Exception
-			ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
+            ShowErrorMessage("Error displaying the program syntax: " & ex.Message)
         End Try
 
     End Sub
