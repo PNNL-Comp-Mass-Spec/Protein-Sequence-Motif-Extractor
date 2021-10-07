@@ -36,7 +36,7 @@ Imports ProteinFileReader
 
 Module modMain
 
-    Public Const PROGRAM_DATE As String = "April 13, 2012"
+    Public Const PROGRAM_DATE As String = "October 6, 2021"
 
     Private mInputFilePath As String
     Private mAssumeFastaFile As Boolean
@@ -255,8 +255,7 @@ Module modMain
     Private Sub ShowProgramHelp()
 
         Try
-
-            Console.WriteLine("This program reads a fasta file or tab delimited file containing protein sequences. " &
+            Console.WriteLine("This program reads a FASTA file or tab delimited file containing protein sequences. " &
                               "It then looks for the specified motif in each protein sequence and creates a new file " &
                               "containing the regions of the protein that contain the specified motif.")
             Console.WriteLine()
@@ -268,10 +267,10 @@ Module modMain
             Console.WriteLine(" [/AD:AlternateDelimiter] [/P:ParameterFilePath] ")
             Console.WriteLine(" [/S:[MaxLevel]] [/A:AlternateOutputFolderPath] [/R] [/L]")
             Console.WriteLine()
-            Console.WriteLine("The input file path can contain the wildcard character * and should point to a fasta file or tab-delimited text file (with columns Protein Name, Description, and Sequence). " &
+            Console.WriteLine("The input file path can contain the wildcard character * and should point to a FASTA file or tab-delimited text file (with columns Protein Name, Description, and Sequence). " &
                               "The output folder switch is optional.  If omitted, the output file will be created in the same folder as the input file. " &
                               "By default, the output file will be a .Fasta file; use /T to instead create a tab-delimited text file. " &
-                              "Use /F to indicate that the input file is a fasta file.  If /F is not used, then the format will be assumed to be fasta only if the file contains .fasta in the name.")
+                              "Use /F to indicate that the input file is a FASTA file.  If /F is not used, then the format will be assumed to be FASTA only if the file contains .fasta in the name.")
             Console.WriteLine()
 
             Console.WriteLine("Use /M to define the motif to look for (examples are /M:K# to find 'K#' or /M:KCLK to find 'KCLK').  Use /X to specify that the Motif is a Regular Expression (RegEx) to match, for example:")
@@ -280,7 +279,7 @@ Module modMain
 
             Console.WriteLine("/N specifies the number of residues to include before or after the matching motif (default " & clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT & ").  /K specifies to not remove (thus Keep) any modification symbols when creating the output file.")
             Console.WriteLine()
-            Console.WriteLine("Use /AD to specify a delimiter other than the Tab character (not applicable for fasta files). The parameter file path is optional.  If included, it should point to a valid XML parameter file.")
+            Console.WriteLine("Use /AD to specify a delimiter other than the Tab character (not applicable for FASTA files). The parameter file path is optional.  If included, it should point to a valid XML parameter file.")
             Console.WriteLine()
 
             Console.WriteLine("Use /S to process all valid files in the input folder and subfolders. Include a number after /S (like /S:2) to limit the level of subfolders to examine. " &
