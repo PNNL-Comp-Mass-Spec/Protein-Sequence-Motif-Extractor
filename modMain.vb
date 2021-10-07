@@ -62,7 +62,6 @@ Module modMain
     Private mRecurseFoldersMaxLevels As Integer
 
     Private mLogMessagesToFile As Boolean
-    Private mQuietMode As Boolean
 
     Private WithEvents mMotifExtractor As clsProteinSequenceMotifExtractor
     Private mLastProgressReportTime As System.DateTime
@@ -95,7 +94,6 @@ Module modMain
         mRecurseFolders = False
         mRecurseFoldersMaxLevels = 0
 
-        mQuietMode = False
         mLogMessagesToFile = False
 
         Try
@@ -113,11 +111,9 @@ Module modMain
             Else
 
                 mMotifExtractor = New clsProteinSequenceMotifExtractor
-                mMotifExtractor.ShowMessages = Not mQuietMode
 
                 ' Note: the following settings will be overridden if mParameterFilePath points to a valid parameter file that has these settings defined
                 With mMotifExtractor
-                    .ShowMessages = Not mQuietMode
                     .LogMessagesToFile = mLogMessagesToFile
 
                     .Motif = mMotif
@@ -145,7 +141,7 @@ Module modMain
                         intReturnCode = 0
                     Else
                         intReturnCode = mMotifExtractor.ErrorCode
-                        If intReturnCode <> 0 AndAlso Not mQuietMode Then
+                        If intReturnCode <> 0 Then
                             Console.WriteLine("Error while processing: " & mMotifExtractor.GetErrorMessage())
                         End If
                     End If
@@ -184,6 +180,7 @@ Module modMain
         ' Returns True if no problems; otherwise, returns false
 
         Dim strValue As String = String.Empty
+        Dim strValidParameters() As String = New String() {"I", "F", "M", "X", "N", "K", "AD", "O", "T", "P", "S", "A", "R", "L"}
 
         Try
             ' Make sure no invalid parameters are present
@@ -232,7 +229,6 @@ Module modMain
                     If .RetrieveValueForParameter("R", strValue) Then mRecreateFolderHierarchyInAlternatePath = True
 
                     If .RetrieveValueForParameter("L", strValue) Then mLogMessagesToFile = True
-                    If .RetrieveValueForParameter("Q", strValue) Then mQuietMode = True
 
                 End With
 
@@ -269,8 +265,8 @@ Module modMain
             Console.WriteLine(System.IO.Path.GetFileName(System.Reflection.Assembly.GetExecutingAssembly().Location) &
                               " /I:SourceFastaOrTextFile [/O:OutputFolderPath] [/T]")
             Console.WriteLine(" [/F] [/M:Motif] [/X] [/N:NumberOfFlankingResidues] [/K]")
-            Console.WriteLine(" [/AD:AlternateDelimeter] [/P:ParameterFilePath] ")
-            Console.WriteLine(" [/S:[MaxLevel]] [/A:AlternateOutputFolderPath] [/R] [/L] [/Q]")
+            Console.WriteLine(" [/AD:AlternateDelimiter] [/P:ParameterFilePath] ")
+            Console.WriteLine(" [/S:[MaxLevel]] [/A:AlternateOutputFolderPath] [/R] [/L]")
             Console.WriteLine()
             Console.WriteLine("The input file path can contain the wildcard character * and should point to a fasta file or tab-delimited text file (with columns Protein Name, Description, and Sequence). " &
                               "The output folder switch is optional.  If omitted, the output file will be created in the same folder as the input file. " &
@@ -291,7 +287,7 @@ Module modMain
                               "When using /S, you can redirect the output of the results using /A. " &
                               "When using /S, you can use /R to re-create the input folder hierarchy in the alternate output folder (if defined).")
 
-            Console.WriteLine("Use /L to log messages to a file.  If /Q is used, then no messages will be displayed at the console.")
+            Console.WriteLine("Use /L to log messages to a file.")
             Console.WriteLine()
 
             Console.WriteLine("Program written by Matthew Monroe for the Department of Energy (PNNL, Richland, WA) in 2012")
