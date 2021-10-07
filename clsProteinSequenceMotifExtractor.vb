@@ -583,7 +583,6 @@ Public Class clsProteinSequenceMotifExtractor
         Dim blnSuccess As Boolean
         Dim strOutputFileName As String
 
-        Dim objFastaFileReader As FastaFileReader
         Dim objDelimitedFileReader As DelimitedProteinFileReader
 
         Try
