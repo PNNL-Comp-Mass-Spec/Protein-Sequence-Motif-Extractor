@@ -70,12 +70,10 @@ Module modMain
     Public Function Main() As Integer
         ' Returns 0 if no error, error code if an error
 
-        Dim intReturnCode As Integer
         Dim objParseCommandLine As New clsParseCommandLine
         Dim blnProceed As Boolean
 
         ' Initialize the options
-        intReturnCode = 0
         mInputFilePath = String.Empty
         mAssumeFastaFile = False
 
@@ -107,55 +105,54 @@ Module modMain
                objParseCommandLine.ParameterCount + objParseCommandLine.NonSwitchParameterCount = 0 OrElse
                mInputFilePath.Length = 0 Then
                 ShowProgramHelp()
-                intReturnCode = -1
-            Else
-
-                mMotifExtractor = New clsProteinSequenceMotifExtractor
-
-                ' Note: the following settings will be overridden if mParameterFilePath points to a valid parameter file that has these settings defined
-                With mMotifExtractor
-                    .LogMessagesToFile = mLogMessagesToFile
-
-                    .Motif = mMotif
-                    .RegexMotif = mRegexMotif
-
-                    .PrefixResidueCount = mPrefixResidueCount
-                    .SuffixResidueCount = mSuffixResidueCount
-                    .KeepModSymbols = mKeepModSymbols
-
-                    .OutputMotifsAsDelimitedTextFile = mOutputMotifsAsDelimitedTextFile
-
-                    .AssumeFastaFile = mAssumeFastaFile
-                    .InputFileDelimiter = mInputFileDelimiter
-                    .DelimitedFileFormatCode = DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Description_Sequence
-                End With
-
-                If mRecurseFolders Then
-                    If mMotifExtractor.ProcessFilesAndRecurseDirectories(mInputFilePath, mOutputFolderName, mOutputFolderAlternatePath, mRecreateFolderHierarchyInAlternatePath, mParameterFilePath, mRecurseFoldersMaxLevels) Then
-                        intReturnCode = 0
-                    Else
-                        intReturnCode = mMotifExtractor.ErrorCode
-                    End If
-                Else
-                    If mMotifExtractor.ProcessFilesWildcard(mInputFilePath, mOutputFolderName, mParameterFilePath) Then
-                        intReturnCode = 0
-                    Else
-                        intReturnCode = mMotifExtractor.ErrorCode
-                        If intReturnCode <> 0 Then
-                            Console.WriteLine("Error while processing: " & mMotifExtractor.GetErrorMessage())
-                        End If
-                    End If
-                End If
-
-                DisplayProgressPercent(mLastProgressReportValue, True)
+                Return -1
             End If
 
+            mMotifExtractor = New clsProteinSequenceMotifExtractor
+
+            ' Note: the following settings will be overridden if mParameterFilePath points to a valid parameter file that has these settings defined
+            With mMotifExtractor
+                .LogMessagesToFile = mLogMessagesToFile
+
+                .Motif = mMotif
+                .RegexMotif = mRegexMotif
+
+                .PrefixResidueCount = mPrefixResidueCount
+                .SuffixResidueCount = mSuffixResidueCount
+                .KeepModSymbols = mKeepModSymbols
+
+                .OutputMotifsAsDelimitedTextFile = mOutputMotifsAsDelimitedTextFile
+
+                .AssumeFastaFile = mAssumeFastaFile
+                .InputFileDelimiter = mInputFileDelimiter
+                .DelimitedFileFormatCode = DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Description_Sequence
+            End With
+
+            Dim returnCode As Integer
+            If mRecurseFolders Then
+                If mMotifExtractor.ProcessFilesAndRecurseDirectories(mInputFilePath, mOutputFolderName, mOutputFolderAlternatePath, mRecreateFolderHierarchyInAlternatePath, mParameterFilePath, mRecurseFoldersMaxLevels) Then
+                    returnCode = 0
+                Else
+                    returnCode = mMotifExtractor.ErrorCode
+                End If
+            Else
+                If mMotifExtractor.ProcessFilesWildcard(mInputFilePath, mOutputFolderName, mParameterFilePath) Then
+                    returnCode = 0
+                Else
+                    returnCode = mMotifExtractor.ErrorCode
+                    If returnCode <> 0 Then
+                        Console.WriteLine("Error while processing: " & mMotifExtractor.GetErrorMessage())
+                    End If
+                End If
+            End If
+
+            DisplayProgressPercent(mLastProgressReportValue, True)
+
+            Return returnCode
         Catch ex As Exception
             ShowErrorMessage("Error occurred in modMain->Main: " & ControlChars.NewLine & ex.Message)
-            intReturnCode = -1
+            Return -1
         End Try
-
-        Return intReturnCode
 
     End Function
 
@@ -180,63 +177,63 @@ Module modMain
         ' Returns True if no problems; otherwise, returns false
 
         Dim strValue As String = String.Empty
-        Dim strValidParameters() As String = New String() {"I", "F", "M", "X", "N", "K", "AD", "O", "T", "P", "S", "A", "R", "L"}
+        Dim strValidParameters = New String() {"I", "F", "M", "X", "N", "K", "AD", "O", "T", "P", "S", "A", "R", "L"}
 
         Try
             ' Make sure no invalid parameters are present
             If objParseCommandLine.InvalidParametersPresent(strValidParameters) Then
                 Return False
-            Else
-                With objParseCommandLine
-                    ' Query objParseCommandLine to see if various parameters are present
-                    If .RetrieveValueForParameter("I", strValue) Then
-                        mInputFilePath = strValue
-                    ElseIf .NonSwitchParameterCount > 0 Then
-                        mInputFilePath = .RetrieveNonSwitchParameter(0)
-                    End If
-
-                    If .RetrieveValueForParameter("F", strValue) Then mAssumeFastaFile = True
-
-                    If .RetrieveValueForParameter("M", strValue) Then mMotif = strValue
-                    If .RetrieveValueForParameter("X", strValue) Then mRegexMotif = True
-
-                    If .RetrieveValueForParameter("N", strValue) Then
-                        If Not Integer.TryParse(strValue, mPrefixResidueCount) Then
-                            ShowErrorMessage("Error parsing number from the /N parameter; use /N:30 to specify " &
-                                             clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT & " residues be included before and after the matching motif")
-
-                            mPrefixResidueCount = clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT
-                        End If
-                        mSuffixResidueCount = mPrefixResidueCount
-                    End If
-
-                    If .RetrieveValueForParameter("K", strValue) Then mKeepModSymbols = True
-
-                    If .RetrieveValueForParameter("AD", strValue) Then mInputFileDelimiter = strValue.Chars(0)
-
-                    If .RetrieveValueForParameter("O", strValue) Then mOutputFolderName = strValue
-                    If .RetrieveValueForParameter("T", strValue) Then mOutputMotifsAsDelimitedTextFile = True
-
-                    If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
-
-                    If .RetrieveValueForParameter("S", strValue) Then
-                        mRecurseFolders = True
-                        If Not Integer.TryParse(strValue, mRecurseFoldersMaxLevels) Then
-                            mRecurseFoldersMaxLevels = 0
-                        End If
-                    End If
-                    If .RetrieveValueForParameter("A", strValue) Then mOutputFolderAlternatePath = strValue
-                    If .RetrieveValueForParameter("R", strValue) Then mRecreateFolderHierarchyInAlternatePath = True
-
-                    If .RetrieveValueForParameter("L", strValue) Then mLogMessagesToFile = True
-
-                End With
-
-                Return True
             End If
+            With objParseCommandLine
+                ' Query objParseCommandLine to see if various parameters are present
+                If .RetrieveValueForParameter("I", strValue) Then
+                    mInputFilePath = strValue
+                ElseIf .NonSwitchParameterCount > 0 Then
+                    mInputFilePath = .RetrieveNonSwitchParameter(0)
+                End If
+
+                If .RetrieveValueForParameter("F", strValue) Then mAssumeFastaFile = True
+
+                If .RetrieveValueForParameter("M", strValue) Then mMotif = strValue
+                If .RetrieveValueForParameter("X", strValue) Then mRegexMotif = True
+
+                If .RetrieveValueForParameter("N", strValue) Then
+                    If Not Integer.TryParse(strValue, mPrefixResidueCount) Then
+                        ShowErrorMessage("Error parsing number from the /N parameter; use /N:30 to specify " &
+                                         clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT & " residues be included before and after the matching motif")
+
+                        mPrefixResidueCount = clsProteinSequenceMotifExtractor.DEFAULT_PREFIX_RESIDUE_COUNT
+                    End If
+                    mSuffixResidueCount = mPrefixResidueCount
+                End If
+
+                If .RetrieveValueForParameter("K", strValue) Then mKeepModSymbols = True
+
+                If .RetrieveValueForParameter("AD", strValue) Then mInputFileDelimiter = strValue.Chars(0)
+
+                If .RetrieveValueForParameter("O", strValue) Then mOutputFolderName = strValue
+                If .RetrieveValueForParameter("T", strValue) Then mOutputMotifsAsDelimitedTextFile = True
+
+                If .RetrieveValueForParameter("P", strValue) Then mParameterFilePath = strValue
+
+                If .RetrieveValueForParameter("S", strValue) Then
+                    mRecurseFolders = True
+                    If Not Integer.TryParse(strValue, mRecurseFoldersMaxLevels) Then
+                        mRecurseFoldersMaxLevels = 0
+                    End If
+                End If
+                If .RetrieveValueForParameter("A", strValue) Then mOutputFolderAlternatePath = strValue
+                If .RetrieveValueForParameter("R", strValue) Then mRecreateFolderHierarchyInAlternatePath = True
+
+                If .RetrieveValueForParameter("L", strValue) Then mLogMessagesToFile = True
+
+            End With
+
+            Return True
 
         Catch ex As Exception
             ShowErrorMessage("Error parsing the command line parameters: " & ControlChars.NewLine & ex.Message)
+            Return False
         End Try
 
     End Function
