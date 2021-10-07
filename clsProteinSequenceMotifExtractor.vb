@@ -1,6 +1,14 @@
 Option Strict On
 
-' This class will read a protein fasta file or tab delimited file
+Imports System.IO
+Imports System.Reflection
+Imports System.Text
+Imports System.Text.RegularExpressions
+Imports PRISM
+Imports PRISM.FileProcessor
+Imports ProteinFileReader
+
+' This class will read a protein FASTA file or tab delimited file
 ' containing protein sequences. It then looks for the specified motif in each protein sequence
 ' and creates a new file containing the regions of the protein that contain the specified motif
 '
@@ -9,7 +17,7 @@ Option Strict On
 ' Started March 31, 2010
 
 Public Class clsProteinSequenceMotifExtractor
-    Inherits clsProcessFilesBaseClass
+    Inherits ProcessFilesBase
 
     Public Sub New()
         MyBase.mFileDate = "November 1, 2013"
@@ -55,7 +63,7 @@ Public Class clsProteinSequenceMotifExtractor
     Private mAssumeDelimitedFile As Boolean
     Private mAssumeFastaFile As Boolean
     Private mInputFileDelimiter As Char                             ' Only used for delimited protein input files, not for fasta files
-    Private mDelimitedInputFileFormatCode As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
+    Private mDelimitedInputFileFormatCode As DelimitedProteinFileReader.ProteinFileFormatCode
 
     Private mMotif As String
     Private mRegexMotif As Boolean
@@ -96,11 +104,11 @@ Public Class clsProteinSequenceMotifExtractor
         End Set
     End Property
 
-    Public Property DelimitedFileFormatCode() As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode
+    Public Property DelimitedFileFormatCode() As DelimitedProteinFileReader.ProteinFileFormatCode
         Get
             Return mDelimitedInputFileFormatCode
         End Get
-        Set(ByVal Value As ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+        Set(Value As DelimitedProteinFileReader.ProteinFileFormatCode)
             mDelimitedInputFileFormatCode = Value
         End Set
     End Property
@@ -451,7 +459,7 @@ Public Class clsProteinSequenceMotifExtractor
         mAssumeDelimitedFile = False
         mAssumeFastaFile = False
         mInputFileDelimiter = ControlChars.Tab
-        mDelimitedInputFileFormatCode = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence
+        mDelimitedInputFileFormatCode = DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Description_Sequence
 
         mMotif = "K#"
         mRegexMotif = False
@@ -515,18 +523,18 @@ Public Class clsProteinSequenceMotifExtractor
 
                     Me.InputFileDelimiter = LookupColumnDelimiterChar(intDelimeterIndex, ControlChars.Tab, Me.InputFileDelimiter)
 
-                    Me.DelimitedFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_OPTIONS, "InputFileColumnOrdering", CInt(Me.DelimitedFileFormatCode)), ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode)
+                    DelimitedFileFormatCode = CType(objSettingsFile.GetParam(XML_SECTION_OPTIONS, "InputFileColumnOrdering", CInt(DelimitedFileFormatCode)), DelimitedProteinFileReader.ProteinFileFormatCode)
 
 
-                    Me.Motif = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "Motif", Me.Motif)
-                    Me.RegexMotif = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "RegexMotif", Me.RegexMotif)
+                    Motif = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "Motif", Motif)
+                    RegexMotif = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "RegexMotif", RegexMotif)
 
-                    Me.PrefixResidueCount = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "PrefixResidueCount", Me.PrefixResidueCount)
-                    Me.SuffixResidueCount = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "SuffixResidueCount", Me.SuffixResidueCount)
+                    PrefixResidueCount = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "PrefixResidueCount", PrefixResidueCount)
+                    SuffixResidueCount = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "SuffixResidueCount", SuffixResidueCount)
 
-                    Me.KeepModSymbols = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "KeepModSymbols", Me.KeepModSymbols)
+                    KeepModSymbols = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "KeepModSymbols", KeepModSymbols)
 
-                    Me.OutputMotifsAsDelimitedTextFile = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "OutputMotifsAsDelimitedTextFile", Me.OutputMotifsAsDelimitedTextFile)
+                    OutputMotifsAsDelimitedTextFile = objSettingsFile.GetParam(XML_SECTION_OPTIONS, "OutputMotifsAsDelimitedTextFile", OutputMotifsAsDelimitedTextFile)
                 End If
             End If
 
@@ -567,18 +575,18 @@ Public Class clsProteinSequenceMotifExtractor
 
     End Function
 
-    Protected Function OpenInputFile(ByVal strInputFilePath As String,
-                                     ByVal strOutputFolderPath As String,
-                                     ByVal strOutputFileNameBaseOverride As String,
-                                     ByRef objProteinFileReader As ProteinFileReader.ProteinFileReaderBaseClass,
+    Protected Function OpenInputFile(strInputFilePath As String,
+                                     strOutputFolderPath As String,
+                                     strOutputFileNameBaseOverride As String,
+                                     ByRef objProteinFileReader As ProteinFileReaderBaseClass,
                                      ByRef blnUseUniqueIDValuesFromInputFile As Boolean,
                                      ByRef strOutputMotifsFilePath As String) As Boolean
 
         Dim blnSuccess As Boolean
         Dim strOutputFileName As String
 
-        Dim objFastaFileReader As ProteinFileReader.FastaFileReader
-        Dim objDelimitedFileReader As ProteinFileReader.DelimitedFileReader
+        Dim objFastaFileReader As FastaFileReader
+        Dim objDelimitedFileReader As DelimitedProteinFileReader
 
         Try
 
@@ -606,24 +614,18 @@ Public Class clsProteinSequenceMotifExtractor
 
                 ' Instantiate the protein file reader object
                 If mParsedFileIsFastaFile Then
-                    objFastaFileReader = New ProteinFileReader.FastaFileReader
-                    With objFastaFileReader
-                        .ProteinLineStartChar = FastaFileOptions.ProteinLineStartChar
-                        .ProteinLineAccessionEndChar = FastaFileOptions.ProteinLineAccessionEndChar
-                    End With
-                    objProteinFileReader = objFastaFileReader
+                    objProteinFileReader = New FastaFileReader
 
                     blnUseUniqueIDValuesFromInputFile = False
                 Else
-                    objDelimitedFileReader = New ProteinFileReader.DelimitedFileReader
-                    With objDelimitedFileReader
-                        .Delimiter = mInputFileDelimiter
-                        .DelimitedFileFormatCode = mDelimitedInputFileFormatCode
-                    End With
+                    objDelimitedFileReader = New DelimitedProteinFileReader
+                    objDelimitedFileReader.Delimiter = mInputFileDelimiter
+                    objDelimitedFileReader.DelimitedFileFormatCode = mDelimitedInputFileFormatCode
+
                     objProteinFileReader = objDelimitedFileReader
 
-                    If mDelimitedInputFileFormatCode = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_PeptideSequence_UniqueID Or
-                       mDelimitedInputFileFormatCode = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.UniqueID_Sequence Then
+                    If mDelimitedInputFileFormatCode = DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_PeptideSequence_UniqueID Or
+                       mDelimitedInputFileFormatCode = DelimitedProteinFileReader.ProteinFileFormatCode.UniqueID_Sequence Then
                         blnUseUniqueIDValuesFromInputFile = True
                     Else
                         blnUseUniqueIDValuesFromInputFile = False

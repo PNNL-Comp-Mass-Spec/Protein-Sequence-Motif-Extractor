@@ -1,6 +1,9 @@
 ﻿Option Strict On
 
-' This program can be used to read a fasta file or tab delimited file
+Imports PRISM
+Imports ProteinFileReader
+
+' This program can be used to read a FASTA file or tab delimited file
 ' containing protein sequences. It then looks for the specified motif in each protein sequence
 ' and creates a new file containing the regions of the protein that contain the specified motif
 '
@@ -128,11 +131,11 @@ Module modMain
 
                     .AssumeFastaFile = mAssumeFastaFile
                     .InputFileDelimiter = mInputFileDelimiter
-                    .DelimitedFileFormatCode = ProteinFileReader.DelimitedFileReader.eDelimitedFileFormatCode.ProteinName_Description_Sequence
+                    .DelimitedFileFormatCode = DelimitedProteinFileReader.ProteinFileFormatCode.ProteinName_Description_Sequence
                 End With
 
                 If mRecurseFolders Then
-                    If mMotifExtractor.ProcessFilesAndRecurseFolders(mInputFilePath, mOutputFolderName, mOutputFolderAlternatePath, mRecreateFolderHierarchyInAlternatePath, mParameterFilePath, mRecurseFoldersMaxLevels) Then
+                    If mMotifExtractor.ProcessFilesAndRecurseDirectories(mInputFilePath, mOutputFolderName, mOutputFolderAlternatePath, mRecreateFolderHierarchyInAlternatePath, mParameterFilePath, mRecurseFoldersMaxLevels) Then
                         intReturnCode = 0
                     Else
                         intReturnCode = mMotifExtractor.ErrorCode
@@ -177,11 +180,10 @@ Module modMain
         Return System.Reflection.Assembly.GetExecutingAssembly.GetName.Version.ToString & " (" & PROGRAM_DATE & ")"
     End Function
 
-    Private Function SetOptionsUsingCommandLineParameters(ByVal objParseCommandLine As clsParseCommandLine) As Boolean
+    Private Function SetOptionsUsingCommandLineParameters(objParseCommandLine As clsParseCommandLine) As Boolean
         ' Returns True if no problems; otherwise, returns false
 
         Dim strValue As String = String.Empty
-        Dim strValidParameters() As String = New String() {"I", "F", "M", "X", "N", "K", "AD", "O", "T", "P", "S", "A", "R", "L", "Q"}
 
         Try
             ' Make sure no invalid parameters are present
@@ -309,7 +311,7 @@ Module modMain
 
     End Sub
 
-    Private Sub mMotifExtractor_ProgressChanged(ByVal taskDescription As String, ByVal percentComplete As Single) Handles mMotifExtractor.ProgressChanged
+    Private Sub mMotifExtractor_ProgressChanged(taskDescription As String, percentComplete As Single) Handles mMotifExtractor.ProgressUpdate
         Const PERCENT_REPORT_INTERVAL As Integer = 25
         Const PROGRESS_DOT_INTERVAL_MSEC As Integer = 250
 
